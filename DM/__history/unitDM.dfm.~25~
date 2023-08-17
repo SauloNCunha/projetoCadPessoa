@@ -1,0 +1,89 @@
+object DM: TDM
+  OldCreateOrder = False
+  OnCreate = DataModuleCreate
+  Height = 598
+  Width = 846
+  object conBanco: TFDConnection
+    Params.Strings = (
+      
+        'Database=C:\Users\saulo\Documents\projetosdelphi\projetoCadPesso' +
+        'a\CADPESSOA.FDB'
+      'User_Name=SYSDBA'
+      'DriverID=FB')
+    LoginPrompt = False
+    Left = 32
+    Top = 24
+  end
+  object FBDriver: TFDPhysFBDriverLink
+    Left = 32
+    Top = 80
+  end
+  object fdgxwtcrsr: TFDGUIxWaitCursor
+    Provider = 'Forms'
+    Left = 32
+    Top = 136
+  end
+  object tabPessoa: TFDTable
+    IndexFieldNames = 'CODIGO'
+    Connection = conBanco
+    UpdateOptions.UpdateTableName = 'PESSOA'
+    TableName = 'PESSOA'
+    Left = 128
+    Top = 24
+  end
+  object ACBrIBGE1: TACBrIBGE
+    ProxyPort = '8080'
+    CacheArquivo = 'ACBrIBGE.txt'
+    Left = 455
+    Top = 163
+  end
+  object ACBrCEP1: TACBrCEP
+    ProxyPort = '8080'
+    ParseText = True
+    WebService = wsBuscarCep
+    PesquisarIBGE = True
+    Left = 455
+    Top = 107
+  end
+  object ACBrConsultaCPF1: TACBrConsultaCPF
+    ProxyPort = '8080'
+    IniServicos = 
+      'C:\Program Files (x86)\Embarcadero\Studio\20.0\bin\ACBrConsultaC' +
+      'PFServicos.ini'
+    Left = 456
+    Top = 59
+  end
+  object ACBrConsultaCNPJ1: TACBrConsultaCNPJ
+    ProxyPort = '8080'
+    PesquisarIBGE = False
+    IniServicos = 
+      'C:\Program Files (x86)\Embarcadero\Studio\20.0\bin\ACBrConsultaC' +
+      'NPJServicos.ini'
+    Left = 456
+    Top = 11
+  end
+  object tabEndereco: TFDTable
+    IndexFieldNames = 'CODIGO'
+    Connection = conBanco
+    UpdateOptions.UpdateTableName = 'ENDERECO'
+    TableName = 'ENDERECO'
+    Left = 128
+    Top = 80
+  end
+  object tabCidade: TFDTable
+    IndexFieldNames = 'CODIGO'
+    Connection = conBanco
+    UpdateOptions.UpdateTableName = 'CIDADE'
+    TableName = 'CIDADE'
+    Left = 128
+    Top = 136
+  end
+  object tebTelefone: TFDTable
+    IndexFieldNames = 'CODIGO'
+    Connection = conBanco
+    UpdateOptions.UpdateTableName = 'TELEFONE'
+    TableName = 'TELEFONE'
+    Left = 128
+    Top = 192
+  end
+end

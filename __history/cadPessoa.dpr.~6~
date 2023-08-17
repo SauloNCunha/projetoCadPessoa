@@ -1,0 +1,19 @@
+program cadPessoa;
+
+uses
+  Vcl.Forms,
+  unitPrincipal in 'unitPrincipal.pas' {frmPrincipal},
+  unitDM in 'DM\unitDM.pas' {DM: TDataModule},
+  unitCadastroPessoa in 'Cadastros\unitCadastroPessoa.pas' {frmCadastroPessoa},
+  utils in 'Utils\utils.pas';
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TfrmPrincipal, frmPrincipal);
+  Application.CreateForm(TDM, DM);
+  Application.CreateForm(TfrmCadastroPessoa, frmCadastroPessoa);
+  Application.Run;
+end.

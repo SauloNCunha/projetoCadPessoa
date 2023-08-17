@@ -1,0 +1,171 @@
+unit UPessoa;
+
+interface
+
+uses
+  FireDAC.Comp.Client; // Certifique-se de adicionar essa unidade
+
+type
+  TPessoa = class
+  private
+    FCodigo: Integer;
+    FNOME: string;
+    FNOMEFANTASIA: string;
+    FCPFCNPJ: string;
+    FTIPOPESSOA: Integer;
+    FEMAIL: string;
+    FSEXO: Integer;
+    FSTATUS: Integer;
+  public
+    property Codigo: Integer read FCodigo write FCodigo;
+    property Nome: string read FNOME write FNOME;
+    property NomeFantasia: string read FNOMEFANTASIA write FNOMEFANTASIA;
+    property CPFCNPJ: string read FCPFCNPJ write FCPFCNPJ;
+    property TipoPessoa: Integer read FTIPOPESSOA write FTIPOPESSOA;
+    property Email: string read FEMAIL write FEMAIL;
+    property Sexo: Integer read FSEXO write FSEXO;
+    property Status: Integer read FSTATUS write FSTATUS;
+
+    procedure Inserir;
+    procedure Excluir;
+    procedure Atualizar;
+    procedure ConsultarPorID(ID: Integer);
+    procedure ConsultarPorPessoa(CPF_CNPJ: string);
+    procedure ConsultarPorNome(Nome: string);
+  end;
+
+implementation
+
+uses
+   unitDM;
+
+procedure TPessoa.Inserir;
+var
+  Query: TFDQuery;
+begin
+     Query := TFDQuery.Create(nil);
+     try
+            Query.Connection := dm.conBanco;
+
+            Query.SQL.Text := 'INSERT INTO PESSOA (NOME, NOMEFANTASIA, CPFCNPJ, TIPOPESSOA, ' +
+                              'EMAIL, SEXO, STATUS) VALUES (:NOME, :NOMEFANTASIA, :CPFCNPJ, ' +
+                              ':TIPOPESSOA, :EMAIL, :SEXO, :STATUS)';
+            Query.ParamByName('NOME').AsString := FNOME;
+            Query.ParamByName('NOMEFANTASIA').AsString := FNOMEFANTASIA;
+            Query.ParamByName('CPFCNPJ').AsString := FCPFCNPJ;
+            Query.ParamByName('TIPOPESSOA').AsInteger := FTIPOPESSOA;
+            Query.ParamByName('EMAIL').AsString := FEMAIL;
+            Query.ParamByName('SEXO').AsInteger := FSEXO;
+            Query.ParamByName('STATUS').AsInteger := FSTATUS;
+
+            Query.ExecSQL;
+     finally
+            Query.Free;
+     end;
+end;
+
+procedure TPessoa.Excluir;
+var
+  Query: TFDQuery;
+begin
+     Query := TFDQuery.Create(nil);
+     try
+            Query.Connection := dm.conBanco;
+
+            Query.SQL.Text := 'DELETE FROM PESSOA WHERE CODIGO = :CODIGO';
+            Query.ParamByName('CODIGO').AsInteger := FCodigo;
+
+            Query.ExecSQL;
+     finally
+            Query.Free;
+     end;
+end;
+
+procedure TPessoa.Atualizar;
+var
+  Query: TFDQuery;
+begin
+     Query := TFDQuery.Create(nil);
+     try
+              Query.Connection := dm.conBanco;
+
+            Query.SQL.Text := 'UPDATE PESSOA SET NOME = :NOME, NOMEFANTASIA = :NOMEFANTASIA, ' +
+                              'CPFCNPJ = :CPFCNPJ, TIPOPESSOA = :TIPOPESSOA, ' +
+                              'EMAIL = :EMAIL, SEXO = :SEXO, STATUS = :STATUS ' +
+                              'WHERE CODIGO = :CODIGO';
+            Query.ParamByName('NOME').AsString := FNOME;
+            Query.ParamByName('NOMEFANTASIA').AsString := FNOMEFANTASIA;
+            Query.ParamByName('CPFCNPJ').AsString := FCPFCNPJ;
+            Query.ParamByName('TIPOPESSOA').AsInteger := FTIPOPESSOA;
+            Query.ParamByName('EMAIL').AsString := FEMAIL;
+            Query.ParamByName('SEXO').AsInteger := FSEXO;
+            Query.ParamByName('STATUS').AsInteger := FSTATUS;
+            Query.ParamByName('CODIGO').AsInteger := FCodigo;
+
+            Query.ExecSQL;
+     finally
+            Query.Free;
+     end;
+end;
+
+procedure TPessoa.ConsultarPorID(ID: Integer);
+var
+  Query: TFDQuery;
+begin
+     Query := TFDQuery.Create(nil);
+     try
+            Query.Connection := dm.conBanco;
+
+            Query.SQL.Text := 'SELECT * FROM PESSOA WHERE CODIGO = :CODIGO';
+            Query.ParamByName('CODIGO').AsInteger := ID;
+
+            Query.Open;
+
+            if not Query.IsEmpty then
+            begin
+                 FCodigo := Query.FieldByName('CODIGO').AsInteger;
+                 FNOME := Query.FieldByName('NOME').AsString;
+                 FNOMEFANTASIA := Query.FieldByName('NOMEFANTASIA').AsString;
+                 FCPFCNPJ := Query.FieldByName('CPFCNPJ').AsString;
+                 FTIPOPESSOA := Query.FieldByName('TIPOPESSOA').AsInteger;
+                 FEMAIL := Query.FieldByName('EMAIL').AsString;
+                 FSEXO := Query.FieldByName('SEXO').AsInteger;
+                 FSTATUS := Query.FieldByName('STATUS').AsInteger;
+            end;
+     finally
+            Query.Free;
+     end;
+end;
+
+procedure TPessoa.ConsultarPorNome(Nome: string);
+var
+  Query: TFDQuery;
+begin
+     Query := TFDQuery.Create(nil);
+     try
+            Query.Connection := dm.conBanco;
+
+            Query.SQL.Text := 'SELECT * FROM PESSOA WHERE NOME = :NOME';
+            Query.ParamByName('NOME').AsString := Nome;
+
+            Query.Open;
+
+            if not Query.IsEmpty then
+            begin
+                 FCodigo := Query.FieldByName('CODIGO').AsInteger;
+                 FNOME := Query.FieldByName('NOME').AsString;
+                 FNOMEFANTASIA := Query.FieldByName('NOMEFANTASIA').AsString;
+                 FCPFCNPJ := Query.FieldByName('CPFCNPJ').AsString;
+                 FTIPOPESSOA := Query.FieldByName('TIPOPESSOA').AsInteger;
+                 FEMAIL := Query.FieldByName('EMAIL').AsString;
+                 FSEXO := Query.FieldByName('SEXO').AsInteger;
+                 FSTATUS := Query.FieldByName('STATUS').AsInteger;
+            end;
+     finally
+            Query.Free;
+     end;
+end;
+
+end.
+
+

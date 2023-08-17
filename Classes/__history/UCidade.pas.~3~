@@ -1,0 +1,51 @@
+unit UCidade;
+
+interface
+
+uses
+ FireDAC.Comp.Client;
+
+type
+  TCidade = class
+  private
+    FCodigo: Integer;
+    FIBGE: string;
+    FUF: Integer;
+    FEndereco: Integer;
+  public
+    property Codigo: Integer read FCodigo write FCodigo;
+    property IBGE: string read FIBGE write FIBGE;
+    property UF: Integer read FUF write FUF;
+    property Endereco: Integer read FEndereco write FEndereco;
+
+    procedure Inserir;
+    procedure Excluir;
+    procedure Atualizar;
+    procedure ConsultarPorIBGE(IBGE: string);
+  end;
+
+implementation
+
+uses
+  unitDM;
+
+procedure TCidade.Inserir;
+var
+  Query: TFDQuery;
+begin
+     Query := TFDQuery.Create(nil);
+     try
+            Query.Connection := DM.conBanco;
+
+            Query.SQL.Text := 'INSERT INTO CIDADE (IBGE, UF, ENDERECO) VALUES (:IBGE, :UF, :ENDERECO)';
+            Query.ParamByName('IBGE').AsString := FIBGE;
+            Query.ParamByName('UF').AsInteger := FUF;
+            Query.ParamByName('ENDERECO').AsInteger := FEndereco;
+
+            Query.ExecSQL;
+     finally
+            Query.Free;
+     end;
+end;
+
+end.

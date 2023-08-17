@@ -1,0 +1,209 @@
+unit UEndereco;
+
+interface
+uses
+ FireDAC.Comp.Client, SysUtils;
+
+type
+  TEndereco = class
+  private
+    FCodigo: Integer;
+    FPessoa: Integer;
+    FCEP: string;
+    FLogradouro: string;
+    FNumero: string;
+    FBairro: string;
+    FComplemento: string;
+    FCidade: Integer;
+    FUF: Integer;
+  public
+    property Codigo: Integer read FCodigo write FCodigo;
+    property Pessoa: Integer read FPessoa write FPessoa;
+    property CEP: string read FCEP write FCEP;
+    property Logradouro: string read FLogradouro write FLogradouro;
+    property Numero: string read FNumero write FNumero;
+    property Bairro: string read FBairro write FBairro;
+    property Complemento: string read FComplemento write FComplemento;
+    property Cidade: Integer read FCidade write FCidade;
+    property UF: Integer read FUF write FUF;
+
+    procedure Inserir;
+    procedure Excluir;
+    procedure Atualizar;
+    procedure ConsultarPorPessoa(PessoaID: Integer);
+    procedure ConsultarPorID(codigo: Integer);
+
+    function ProximoCodigoEndereco: Integer;
+  end;
+
+
+implementation
+
+uses
+  unitDM;
+
+procedure TEndereco.Inserir;
+var
+  Query: TFDQuery;
+begin
+     Query := TFDQuery.Create(nil);
+     try
+            Query.Connection := dm.conBanco;
+
+            // Verifica se a pessoa associada ao endereço existe
+            Query.SQL.Text := 'SELECT COUNT(*) FROM PESSOA WHERE CODIGO = :PESSOA';
+            Query.ParamByName('PESSOA').AsInteger := FPessoa;
+            Query.Open;
+
+            if Query.Fields[0].AsInteger > 0 then
+            begin
+                  Query.Close;
+
+                  Query.SQL.Text := 'INSERT INTO ENDERECO (CODIGO, PESSOA, CEP, LOUGRADOURO, NUMERO, ' +
+                      'BAIRRO, COMPLEMENTO, CIDADE, UF) ' +
+                      'VALUES (:CODIGO, :PESSOA, :CEP, :LOGRADOURO, :NUMERO, :BAIRRO, ' +
+                      ':COMPLEMENTO, :CIDADE, :UF)';
+                  Query.ParamByName('CODIGO').AsInteger := ProximoCodigoEndereco;
+                  Query.ParamByName('PESSOA').AsInteger := FPessoa;
+                  Query.ParamByName('CEP').AsString := FCEP;
+                  Query.ParamByName('LOGRADOURO').AsString := FLogradouro;
+                  Query.ParamByName('NUMERO').AsString := FNumero;
+                  Query.ParamByName('BAIRRO').AsString := FBairro;
+                  Query.ParamByName('COMPLEMENTO').AsString := FComplemento;
+                  Query.ParamByName('CIDADE').AsInteger := FCidade;
+                  Query.ParamByName('UF').AsInteger := FUF;
+
+                  Query.ExecSQL;
+            end
+            else
+            begin
+                 raise Exception.Create('Pessoa não encontrada para o vínculo de endereço.');
+            end;
+     finally
+           Query.Free;
+     end;
+end;
+
+procedure TEndereco.Excluir;
+var
+  Query: TFDQuery;
+begin
+     Query := TFDQuery.Create(nil);
+     try
+            Query.Connection := dm.conBanco;
+
+            Query.SQL.Text := 'DELETE FROM ENDERECO WHERE CODIGO = :CODIGO';
+            Query.ParamByName('CODIGO').AsInteger := FCodigo;
+
+            Query.ExecSQL;
+     finally
+            Query.Free;
+     end;
+end;
+
+procedure TEndereco.Atualizar;
+var
+  Query: TFDQuery;
+begin
+     Query := TFDQuery.Create(nil);
+     try
+            Query.Connection := dm.conBanco;
+
+            Query.SQL.Text := 'UPDATE ENDERECO SET PESSOA = :PESSOA, CEP = :CEP, LOUGRADOURO = :LOGRADOURO, ' +
+                              'NUMERO = :NUMERO, BAIRRO = :BAIRRO, COMPLEMENTO = :COMPLEMENTO, CIDADE = :CIDADE, ' +
+                              'UF = :UF WHERE CODIGO = :CODIGO';
+            Query.ParamByName('PESSOA').AsInteger := FPessoa;
+            Query.ParamByName('CEP').AsString := FCEP;
+            Query.ParamByName('LOGRADOURO').AsString := FLogradouro;
+            Query.ParamByName('NUMERO').AsString := FNumero;
+            Query.ParamByName('BAIRRO').AsString := FBairro;
+            Query.ParamByName('COMPLEMENTO').AsString := FComplemento;
+            Query.ParamByName('CIDADE').AsInteger := FCidade;
+            Query.ParamByName('UF').AsInteger := FUF;
+            Query.ParamByName('CODIGO').AsInteger := FCodigo;
+
+            Query.ExecSQL;
+     finally
+            Query.Free;
+     end;
+end;
+
+
+procedure TEndereco.ConsultarPorPessoa(PessoaID: Integer);
+var
+  Query: TFDQuery;
+begin
+     Query := TFDQuery.Create(nil);
+     try
+            Query.Connection := dm.conBanco;
+
+            Query.SQL.Text := 'SELECT * FROM ENDERECO WHERE PESSOA = :PESSOA';
+            Query.ParamByName('PESSOA').AsInteger := PessoaID;
+
+            Query.Open;
+
+            if not Query.IsEmpty then
+            begin
+                 FCodigo := Query.FieldByName('CODIGO').AsInteger;
+                 FPessoa := Query.FieldByName('PESSOA').AsInteger;
+                 FCEP := Query.FieldByName('CEP').AsString;
+                 FLogradouro := Query.FieldByName('LOUGRADOURO').AsString;
+                 FNumero := Query.FieldByName('NUMERO').AsString;
+                 FBairro := Query.FieldByName('BAIRRO').AsString;
+                 FComplemento := Query.FieldByName('COMPLEMENTO').AsString;
+                 FCidade := Query.FieldByName('CIDADE').AsInteger;
+                 FUF := Query.FieldByName('UF').AsInteger;
+            end;
+     finally
+            Query.Free;
+     end;
+end;
+
+procedure TEndereco.ConsultarPorID(codigo: Integer);
+var
+  Query: TFDQuery;
+begin
+     Query := TFDQuery.Create(nil);
+     try
+            Query.Connection := dm.conBanco;
+
+            Query.SQL.Text := 'SELECT * FROM ENDERECO WHERE CODIGO = :CODIGO';
+            Query.ParamByName('CODIGO').AsInteger := codigo;
+
+            Query.Open;
+
+            if not Query.IsEmpty then
+            begin
+                 FCodigo := Query.FieldByName('CODIGO').AsInteger;
+                 FPessoa := Query.FieldByName('PESSOA').AsInteger;
+                 FCEP := Query.FieldByName('CEP').AsString;
+                 FLogradouro := Query.FieldByName('LOUGRADOURO').AsString;
+                 FNumero := Query.FieldByName('NUMERO').AsString;
+                 FBairro := Query.FieldByName('BAIRRO').AsString;
+                 FComplemento := Query.FieldByName('COMPLEMENTO').AsString;
+                 FCidade := Query.FieldByName('CIDADE').AsInteger;
+                 FUF := Query.FieldByName('UF').AsInteger;
+            end;
+     finally
+            Query.Free;
+     end;
+end;
+
+function ProximoCodigoEndereco: Integer;
+var
+  Query: TFDQuery;
+begin
+     Query := TFDQuery.Create(nil);
+     try
+            Query.Connection := dm.conBanco;
+
+            Query.SQL.Text := 'SELECT GEN_ID(GEN_ENDERECO_ID, 1) FROM RDB$DATABASE';
+            Query.Open;
+
+            Result := Query.Fields[0].AsInteger;
+     finally
+            Query.Free;
+     end;
+end;
+
+end.

@@ -1,0 +1,76 @@
+unit UConsultaPessoa;
+
+interface
+
+uses
+  FireDAC.Comp.Client, Data.DB, System.Classes;
+
+type
+  TConsultasPessoa = class
+  private
+    FConnection: TFDConnection;
+    FQuery: TFDQuery;
+
+    procedure ConfigureQuery;
+  public
+    constructor Create(Connection: TFDConnection);
+    destructor Destroy; override;
+
+    function ConsultarPorNome(Nome: string): TDataSet;
+    function ConsultarPorCPFCNPJ(CPFCNPJ: string): TDataSet;
+    function ConsultarPorCodigo(Codigo: Integer): TDataSet;
+    function ConsultarPorLogradouro(Logradouro: string): TDataSet;
+
+  end;
+
+implementation
+
+uses unitDM, unitListagem;
+
+constructor TConsultasPessoa.Create(Connection: TFDConnection);
+begin
+  FConnection := Connection;
+  FQuery := unitListagem.frmListagem.qryPessoa;
+  FQuery.Connection := unitListagem.frmListagem.qryPessoa.Connection;
+
+  ConfigureQuery;
+end;
+
+destructor TConsultasPessoa.Destroy;
+begin
+  FQuery.Free;
+  inherited;
+end;
+
+procedure TConsultasPessoa.ConfigureQuery;
+begin
+
+end;
+
+function TConsultasPessoa.ConsultarPorNome(Nome: string): TDataSet;
+begin
+  FQuery.SQL.Text := 'SELECT * FROM PESSOA WHERE NOME LIKE :NOME';
+  FQuery.ParamByName('NOME').AsString := '%' + Nome + '%';
+  FQuery.Open;
+
+  Result := FQuery;
+end;
+
+function TConsultasPessoa.ConsultarPorCPFCNPJ(CPFCNPJ: string): TDataSet;
+begin
+  // Configurar e executar a consulta por CPFCNPJ
+end;
+
+function TConsultasPessoa.ConsultarPorCodigo(Codigo: Integer): TDataSet;
+begin
+  // Configurar e executar a consulta por código
+end;
+
+function TConsultasPessoa.ConsultarPorLogradouro(Logradouro: string): TDataSet;
+begin
+  // Configurar e executar a consulta por logradouro
+end;
+
+// Implementar outros métodos de consulta conforme necessário
+
+end.

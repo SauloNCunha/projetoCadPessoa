@@ -1,0 +1,147 @@
+unit UCidade;
+
+interface
+
+uses
+  FireDAC.Comp.Client;
+
+type
+  TCidade = class
+  private
+    FCodigo: Integer;
+    FEndereco: Integer;
+    FCidade: string;
+    FIBGE: string;
+    FUF: Integer;
+  public
+    property Codigo: Integer read FCodigo write FCodigo;
+    property Endereco: Integer read FEndereco write FEndereco;
+    property Cidade: string read FCidade write FCidade;
+    property IBGE: string read FIBGE write FIBGE;
+    property UF: Integer read FUF write FUF;
+
+    procedure Inserir;
+    procedure Excluir;
+    procedure Atualizar;
+    procedure ConsultarPorID(ID: Integer);
+    procedure ConsultarPorCidade(NomeCidade: string);
+  end;
+
+implementation
+
+uses
+   unitDM;
+
+procedure TCidade.Inserir;
+var
+  Query: TFDQuery;
+begin
+     Query := TFDQuery.Create(nil);
+     try
+            Query.Connection := dm.conBanco;
+
+            Query.SQL.Text := 'INSERT INTO CIDADE (ENDERECO, CIDADE, IBGE, UF) ' +
+                              'VALUES (:ENDERECO, :CIDADE, :IBGE, :UF)';
+            Query.ParamByName('ENDERECO').AsInteger := FEndereco;
+            Query.ParamByName('CIDADE').AsString := FCidade;
+            Query.ParamByName('IBGE').AsString := FIBGE;
+            Query.ParamByName('UF').AsInteger := FUF;
+
+            Query.ExecSQL;
+     finally
+            Query.Free;
+     end;
+end;
+
+procedure TCidade.Excluir;
+var
+  Query: TFDQuery;
+begin
+     Query := TFDQuery.Create(nil);
+     try
+            Query.Connection := dm.conBanco;
+
+            Query.SQL.Text := 'DELETE FROM CIDADE WHERE CODIGO = :CODIGO';
+            Query.ParamByName('CODIGO').AsInteger := FCodigo;
+
+            Query.ExecSQL;
+     finally
+            Query.Free;
+     end;
+end;
+
+procedure TCidade.Atualizar;
+var
+  Query: TFDQuery;
+begin
+  Query := TFDQuery.Create(nil);
+  try
+    Query.Connection := dm.conBanco;
+
+    Query.SQL.Text := 'UPDATE CIDADE SET ENDERECO = :ENDERECO, CIDADE = :CIDADE, ' +
+                      'IBGE = :IBGE, UF = :UF WHERE CODIGO = :CODIGO';
+    Query.ParamByName('ENDERECO').AsInteger := FEndereco;
+    Query.ParamByName('CIDADE').AsString := FCidade;
+    Query.ParamByName('IBGE').AsString := FIBGE;
+    Query.ParamByName('UF').AsInteger := FUF;
+    Query.ParamByName('CODIGO').AsInteger := FCodigo;
+
+    Query.ExecSQL;
+  finally
+    Query.Free;
+  end;
+end;
+
+procedure TCidade.ConsultarPorID(ID: Integer);
+var
+  Query: TFDQuery;
+begin
+  Query := TFDQuery.Create(nil);
+  try
+    Query.Connection := dm.conBanco;
+
+    Query.SQL.Text := 'SELECT * FROM CIDADE WHERE CODIGO = :CODIGO';
+    Query.ParamByName('CODIGO').AsInteger := ID;
+
+    Query.Open;
+
+    if not Query.IsEmpty then
+    begin
+      FCodigo := Query.FieldByName('CODIGO').AsInteger;
+      FEndereco := Query.FieldByName('ENDERECO').AsInteger;
+      FCidade := Query.FieldByName('CIDADE').AsString;
+      FIBGE := Query.FieldByName('IBGE').AsString;
+      FUF := Query.FieldByName('UF').AsInteger;
+    end;
+  finally
+    Query.Free;
+  end;
+end;
+
+procedure TCidade.ConsultarPorCidade(NomeCidade: string);
+var
+  Query: TFDQuery;
+begin
+  Query := TFDQuery.Create(nil);
+  try
+    Query.Connection := dm.conBanco;
+
+    Query.SQL.Text := 'SELECT * FROM CIDADE WHERE CIDADE = :CIDADE';
+    Query.ParamByName('CIDADE').AsString := NomeCidade;
+
+    Query.Open;
+
+    if not Query.IsEmpty then
+    begin
+      FCodigo := Query.FieldByName('CODIGO').AsInteger;
+      FEndereco := Query.FieldByName('ENDERECO').AsInteger;
+      FCidade := Query.FieldByName('CIDADE').AsString;
+      FIBGE := Query.FieldByName('IBGE').AsString;
+      FUF := Query.FieldByName('UF').AsInteger;
+    end;
+  finally
+    Query.Free;
+  end;
+end;
+
+end.

@@ -1,0 +1,149 @@
+object frmListagem: TfrmListagem
+  Left = 0
+  Top = 0
+  Caption = 'Listagem'
+  ClientHeight = 681
+  ClientWidth = 1008
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 96
+  TextHeight = 13
+  object pnlFundo: TPanel
+    Left = 0
+    Top = 0
+    Width = 1008
+    Height = 681
+    Align = alClient
+    BevelOuter = bvNone
+    Color = clActiveCaption
+    ParentBackground = False
+    TabOrder = 0
+    object gridListagem: TcxGrid
+      Left = 0
+      Top = 0
+      Width = 1008
+      Height = 601
+      Align = alClient
+      TabOrder = 0
+      object gridView: TcxGridDBTableView
+        Navigator.Buttons.CustomButtons = <>
+        DataController.DataSource = dsQryPessoa
+        DataController.Summary.DefaultGroupSummaryItems = <>
+        DataController.Summary.FooterSummaryItems = <>
+        DataController.Summary.SummaryGroups = <>
+        OptionsView.GroupByBox = False
+      end
+      object gridLevel: TcxGridLevel
+        GridView = gridView
+      end
+    end
+    object pnlBotoes: TPanel
+      Left = 0
+      Top = 601
+      Width = 1008
+      Height = 80
+      Align = alBottom
+      BevelOuter = bvNone
+      Color = clGradientActiveCaption
+      ParentBackground = False
+      TabOrder = 1
+      object lblFiltro: TLabel
+        Left = 16
+        Top = 33
+        Width = 28
+        Height = 13
+        Caption = 'Filtro:'
+      end
+      object btn1: TSpeedButton
+        Left = 554
+        Top = 30
+        Width = 19
+        Height = 20
+        Flat = True
+        Glyph.Data = {
+          36040000424D3604000000000000360000002800000010000000100000000100
+          2000000000000004000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          000000000000000000000000000000000016000000BD0000002C000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000016000000D3000000FF000000BD000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          00000000000000000016000000D3000000FF000000D300000016000000000000
+          00000000000000000041000000AC000000E9000000FD000000E9000000AC0000
+          004000000016000000D3000000FF000000D30000001600000000000000000000
+          00040000009A000000FF000000FF000000FF000000FF000000FF000000FF0000
+          00FF000000EA000000FF000000D3000000160000000000000000000000000000
+          009A000000FF000000F50000007B0000001F000000030000001F0000007B0000
+          00F5000000FF000000EA00000016000000000000000000000000000000410000
+          00FF000000F50000003600000000000000000000000000000000000000000000
+          0036000000F5000000FF00000040000000000000000000000000000000AC0000
+          00FF0000007B0000000000000000000000000000000000000000000000000000
+          00000000007B000000FF000000AC000000000000000000000000000000E90000
+          00FF0000001F0000000000000000000000000000000000000000000000000000
+          00000000001F000000FF000000E9000000000000000000000000000000FD0000
+          00FF000000030000000000000000000000000000000000000000000000000000
+          000000000003000000FF000000FD000000000000000000000000000000E90000
+          00FF0000001F0000000000000000000000000000000000000000000000000000
+          00000000001F000000FF000000E9000000000000000000000000000000AD0000
+          00FF0000007B0000000000000000000000000000000000000000000000000000
+          00000000007B000000FF000000AC000000000000000000000000000000410000
+          00FF000000F50000003600000000000000000000000000000000000000000000
+          0036000000F5000000FF00000041000000000000000000000000000000000000
+          009A000000FF000000F50000007B0000001F000000030000001F0000007B0000
+          00F5000000FF0000009A00000000000000000000000000000000000000000000
+          00040000009A000000FF000000FF000000FF000000FF000000FF000000FF0000
+          00FF0000009A0000000400000000000000000000000000000000000000000000
+          00000000000000000041000000AC000000E9000000FD000000E9000000AD0000
+          0041000000000000000000000000000000000000000000000000}
+      end
+      object cbbFiltro: TComboBox
+        Left = 72
+        Top = 30
+        Width = 145
+        Height = 21
+        BevelInner = bvNone
+        TabOrder = 0
+        OnChange = cbbFiltroChange
+        Items.Strings = (
+          'C'#243'digo Pessoa'
+          'Nome'
+          'CPF'
+          'CNPJ'
+          'Lougradouro'
+          'Cidade'
+          'Estado'
+          'Telefone')
+      end
+      object edtFiltro: TEdit
+        Left = 248
+        Top = 38
+        Width = 300
+        Height = 21
+        TabOrder = 1
+      end
+      object medtFiltro: TMaskEdit
+        Left = 248
+        Top = 11
+        Width = 120
+        Height = 21
+        TabOrder = 2
+        Text = ''
+      end
+    end
+  end
+  object qryPessoa: TFDQuery
+    Connection = DM.conBanco
+    Left = 816
+    Top = 616
+  end
+  object dsQryPessoa: TDataSource
+    DataSet = qryPessoa
+    Left = 680
+    Top = 616
+  end
+end

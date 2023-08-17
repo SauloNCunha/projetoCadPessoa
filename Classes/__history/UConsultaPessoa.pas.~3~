@@ -1,0 +1,99 @@
+unit UConsultaPessoa;
+
+interface
+
+uses
+  FireDAC.Comp.Client, Data.DB, System.Classes;
+
+type
+  TConsultasPessoa = class
+  private
+    FConnection: TFDConnection;
+    FQuery: TFDQuery;
+
+    procedure ConfigureQuery;
+  public
+    constructor Create(Connection: TFDConnection);
+    destructor Destroy; override;
+
+    function ConsultarPorNome(Nome: string): TDataSet;
+    function ConsultarPorCPFCNPJ(CPFCNPJ: string): TDataSet;
+    function ConsultarPorCodigo(Codigo: Integer): TDataSet;
+    function ConsultarPorLogradouro(Logradouro: string): TDataSet;
+
+  end;
+
+implementation
+
+uses unitDM, unitListagem;
+
+constructor TConsultasPessoa.Create(Connection: TFDConnection);
+begin
+     FConnection := Connection;
+     FQuery := TFDQuery.Create(nil);
+     FQuery.Connection := FConnection;
+
+  ConfigureQuery;
+end;
+
+destructor TConsultasPessoa.Destroy;
+begin
+     FQuery.Free;
+     inherited;
+end;
+
+procedure TConsultasPessoa.ConfigureQuery;
+begin
+     FQuery := unitListagem.frmListagem.qryPessoa;
+     FQuery.Connection := unitListagem.frmListagem.qryPessoa.Connection;
+end;
+
+function TConsultasPessoa.ConsultarPorNome(Nome: string): TDataSet;
+begin
+     FQuery.SQL.Text := 'SELECT * FROM PESSOA P '+
+                        'LEFT OUTER JOIN ENDERECO E ON E.CODIGO = P.CODIGO '+
+                        'LEFT OUTER JOIN CIDADE C ON C.CODIGO = E.CIDADE '+
+                        'WHERE NOME LIKE :NOME';
+     FQuery.ParamByName('NOME').AsString := '%' + Nome + '%';
+     FQuery.Open;
+
+     Result := FQuery;
+end;
+
+function TConsultasPessoa.ConsultarPorCPFCNPJ(CPFCNPJ: string): TDataSet;
+begin
+     FQuery.SQL.Text := 'SELECT * FROM PESSOA P '+
+                        'LEFT OUTER JOIN ENDERECO E ON E.CODIGO = P.CODIGO '+
+                        'LEFT OUTER JOIN CIDADE C ON C.CODIGO = E.CIDADE '+
+                        'WHERE CPFCNPJ = :CPFCNPJ';
+     FQuery.ParamByName('CPFCNPJ').AsString := CPFCNPJ;
+     FQuery.Open;
+
+     Result := FQuery;
+end;
+
+function TConsultasPessoa.ConsultarPorCodigo(Codigo: Integer): TDataSet;
+begin
+     FQuery.SQL.Text := 'SELECT * FROM PESSOA P '+
+                        'LEFT OUTER JOIN ENDERECO E ON E.CODIGO = P.CODIGO '+
+                        'LEFT OUTER JOIN CIDADE C ON C.CODIGO = E.CIDADE '+
+                        'WHERE P.CODIGO = :CODIGO';
+     FQuery.ParamByName('CODIGO').AsInteger := Codigo;
+     FQuery.Open;
+
+     Result := FQuery;
+end;
+
+function TConsultasPessoa.ConsultarPorLogradouro(Logradouro: string): TDataSet;
+begin
+     FQuery.SQL.Text := 'SELECT * FROM PESSOA P '+
+                        'LEFT OUTER JOIN ENDERECO E ON E.CODIGO = P.CODIGO '+
+                        'LEFT OUTER JOIN CIDADE C ON C.CODIGO = E.CIDADE '+
+                        'WHERE LOUGRADOURO = :LOUGRADOURO';
+     FQuery.ParamByName('LOUGRADOURO').AsString := Logradouro;
+     FQuery.Open;
+
+     Result := FQuery;
+end;
+
+end.

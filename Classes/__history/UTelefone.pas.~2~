@@ -1,0 +1,21 @@
+unit UTelefone;
+
+interface
+
+type
+  TTelefone = class
+  private
+    FCodigo: Integer;
+    FPessoa: Integer;
+    FNumeroTelefone: string;
+    FTipo: Integer;
+  public
+    property Codigo: Integer read FCodigo write FCodigo;
+    property Pessoa: Integer read FPessoa write FPessoa;
+    property NumeroTelefone: string read FNumeroTelefone write FNumeroTelefone;
+    property Tipo: Integer read FTipo write FTipo;
+
+  end;
+implementation
+
+end.

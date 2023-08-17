@@ -1,0 +1,45 @@
+unit unitListagem;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, cxGraphics, cxControls,
+  cxLookAndFeels, cxLookAndFeelPainters, cxStyles, dxSkinsCore,
+  dxSkinsDefaultPainters, cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit,
+  cxNavigator, dxDateRanges, Data.DB, cxDBData, cxGridLevel, cxClasses,
+  cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
+  cxGrid, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
+  FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
+  FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet, FireDAC.Comp.Client,
+  Vcl.StdCtrls, Vcl.Buttons;
+
+type
+  TfrmListagem = class(TForm)
+    pnlFundo: TPanel;
+    gridView: TcxGridDBTableView;
+    gridLevel: TcxGridLevel;
+    gridListagem: TcxGrid;
+    pnlBotoes: TPanel;
+    qryPessoa: TFDQuery;
+    dsQryPessoa: TDataSource;
+    cbbFiltro: TComboBox;
+    lblFiltro: TLabel;
+    edtFiltro: TEdit;
+    btn1: TSpeedButton;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmListagem: TfrmListagem;
+
+implementation
+
+uses unitDM,unitPrincipal;
+
+{$R *.dfm}
+
+end.

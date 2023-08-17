@@ -1,0 +1,34 @@
+unit UPessoa;
+
+interface
+
+type
+  TPessoa = class
+  private
+    FCodigo: Integer;
+    FNome: string;
+    FNomeFantasia: string;
+    FCPFCNPJ: string;
+    FTipoPessoa: Integer;
+    FEmail: string;
+    FSexo: Integer;
+    FStatus: Integer;
+  public
+    property Codigo: Integer read FCodigo write FCodigo;
+    property Nome: string read FNome write FNome;
+    property NomeFantasia: string read FNomeFantasia write FNomeFantasia;
+    property CPFCNPJ: string read FCPFCNPJ write FCPFCNPJ;
+    property TipoPessoa: Integer read FTipoPessoa write FTipoPessoa;
+    property Email: string read FEmail write FEmail;
+    property Sexo: Integer read FSexo write FSexo;
+    property Status: Integer read FStatus write FStatus;
+
+    procedure Inserir;
+    procedure Excluir;
+    procedure Atualizar;
+    procedure ConsultarPorNome(Nome: string);
+  end;
+
+implementation
+
+end.

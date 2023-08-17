@@ -1,0 +1,63 @@
+unit unitListagem;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, cxGraphics, cxControls,
+  cxLookAndFeels, cxLookAndFeelPainters, cxStyles, dxSkinsCore,
+  dxSkinsDefaultPainters, cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit,
+  cxNavigator, dxDateRanges, Data.DB, cxDBData, cxGridLevel, cxClasses,
+  cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
+  cxGrid, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
+  FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
+  FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet, FireDAC.Comp.Client,
+  Vcl.StdCtrls, Vcl.Buttons, Vcl.Mask;
+
+type
+  TfrmListagem = class(TForm)
+    pnlFundo: TPanel;
+    gridView: TcxGridDBTableView;
+    gridLevel: TcxGridLevel;
+    gridListagem: TcxGrid;
+    pnlBotoes: TPanel;
+    qryPessoa: TFDQuery;
+    dsQryPessoa: TDataSource;
+    cbbFiltro: TComboBox;
+    lblFiltro: TLabel;
+    edtFiltro: TEdit;
+    btn1: TSpeedButton;
+    medtFiltro: TMaskEdit;
+    procedure cbbFiltroChange(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmListagem: TfrmListagem;
+
+implementation
+
+uses unitDM,unitPrincipal;
+
+{$R *.dfm}
+
+procedure TfrmListagem.cbbFiltroChange(Sender: TObject);
+begin
+     medtFiltro.Text:='';
+     case cbbFiltro.ItemIndex of
+        0: medtFiltro.EditMask:= '!999999999;1;_';
+        1,4,5: begin
+                medtFiltro.EditMask:= '';
+                medtFiltro.MaxLength:=100;
+           end;
+        2: medtFiltro.EditMask:= '999\.999\.999-99;1;_';
+        3: medtFiltro.EditMask:= '99\.999\.999\/9999-99;1;_';
+        6: medtFiltro.EditMask:= '!(99) 0000-0000;1;_';
+
+     end;
+end;
+
+end.

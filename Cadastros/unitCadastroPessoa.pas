@@ -11,7 +11,8 @@ uses
   Vcl.ImgList, cxDropDownEdit, cxGroupBox, cxRadioGroup, cxStyles, cxCustomData,
   cxFilter, cxData, cxDataStorage, cxNavigator, dxDateRanges, cxDBData,
   cxGridLevel, cxClasses, cxGridCustomView, cxGridCustomTableView,
-  cxGridTableView, cxGridDBTableView, cxGrid, RegularExpressions;
+  cxGridTableView, cxGridDBTableView, cxGrid, RegularExpressions, MemDS,
+  VirtualTable,System.Generics.Collections;
 
 type
   TfrmCadastroPessoa = class(TForm)
@@ -20,18 +21,10 @@ type
     btnConfirma: TBitBtn;
     btnCancela: TBitBtn;
     pnlInputs: TPanel;
-    pgcCadPessoa: TPageControl;
-    tsImputs: TTabSheet;
-    tsEndereco: TTabSheet;
-    tsTelefoen: TTabSheet;
-    pnlInput: TPanel;
     dsPessoa: TDataSource;
     dsTelefone: TDataSource;
     dsEndereco: TDataSource;
-    lblCod: TLabel;
     Timer1: TTimer;
-    lblcpfcnpj: TLabel;
-    lblNome: TLabel;
     pnlConsultaCPF: TPanel;
     pnlBotoesCpf: TPanel;
     btnAtualizaCaptchaCPF: TBitBtn;
@@ -57,47 +50,51 @@ type
     pnlEdtCaptcha: TPanel;
     pnledttextoCaptch: TPanel;
     edtCaptcha: TEdit;
+    dsCidade: TDataSource;
+    vrtltblEndereco: TVirtualTable;
+    EnderecoCEP: TStringField;
+    EnderecoLOUGRADOURO: TStringField;
+    EnderecoNUMERO: TStringField;
+    EnderecoBAIRRO: TStringField;
+    EnderecoCOMPLEMENTO: TStringField;
+    EnderecoCIDADE: TStringField;
+    pnlInput: TPanel;
+    grpEmpresaEndereço: TGroupBox;
+    pnlBotoesEndereco: TPanel;
+    btnAddEndereco: TBitBtn;
+    btnRemoveTelefone: TBitBtn;
+    btnEditarEndereco: TBitBtn;
+    gridEndereco: TcxGrid;
+    gridViewEndereco: TcxGridDBTableView;
+    cxgrdbclmnViewEnderecoCEP: TcxGridDBColumn;
+    cxgrdbclmnViewEnderecoLOUGRADOURO: TcxGridDBColumn;
+    cxgrdbclmnViewEnderecoNUMERO: TcxGridDBColumn;
+    cxgrdbclmnViewEnderecoBAIRRO: TcxGridDBColumn;
+    cxgrdbclmnViewEnderecoCOMPLEMENTO: TcxGridDBColumn;
+    cxgrdbclmnViewEnderecoCIDADE: TcxGridDBColumn;
+    gridLevelEndereco: TcxGridLevel;
+    grpDados: TGroupBox;
+    lblCod: TLabel;
+    lblcpfcnpj: TLabel;
+    lblEmail: TLabel;
+    lblNome: TLabel;
+    lblNomeFantasia: TLabel;
+    edtCodigo: TcxDBTextEdit;
+    edtEmail: TcxDBTextEdit;
+    edtNome: TcxDBTextEdit;
+    edtNomeFantasia: TcxDBTextEdit;
     pnledtCPF: TPanel;
     btnPesquisaCpfCnpj: TSpeedButton;
     edtCpfCnpj: TcxDBTextEdit;
-    edtCodigo: TcxDBTextEdit;
-    edtNome: TcxDBTextEdit;
-    lblNomeFantasia: TLabel;
-    edtNomeFantasia: TcxDBTextEdit;
-    lblEmail: TLabel;
-    edtEmail: TcxDBTextEdit;
-    grpEmpresaEndereço: TGroupBox;
-    lbl11: TLabel;
-    lbl12: TLabel;
-    lbl13: TLabel;
-    lbl14: TLabel;
-    lbl15: TLabel;
-    lbl16: TLabel;
-    lbl17: TLabel;
-    lbl18: TLabel;
-    grpDados: TGroupBox;
     grpSexo: TcxDBRadioGroup;
     grpStatus: TcxDBRadioGroup;
-    mskedtCep: TcxDBMaskEdit;
-    edtLougradouro: TcxDBTextEdit;
-    edtNumero: TcxDBTextEdit;
-    edtComplemento: TcxDBTextEdit;
-    edtBairro: TcxDBTextEdit;
-    cbbEstado: TcxDBComboBox;
-    edtCidade: TcxDBTextEdit;
-    dsCidade: TDataSource;
-    edtIbge: TcxDBTextEdit;
-    btnAddEndereco: TBitBtn;
-    btnRemoveTelefone: TBitBtn;
-    grpTelefone: TGroupBox;
-    edtTelefone: TcxDBTextEdit;
-    lblTelefone: TLabel;
-    grpTipoTelefone: TcxDBRadioGroup;
-    gridViewEndereco: TcxGridDBTableView;
-    gridLevelEndereco: TcxGridLevel;
-    gridEndereco: TcxGrid;
     grpTipo: TcxDBRadioGroup;
-    btnSalvarEndereco: TBitBtn;
+    grpTelefone: TGroupBox;
+    lblTelefone: TLabel;
+    edtTelefone: TcxDBTextEdit;
+    grpTipoTelefone: TcxDBRadioGroup;
+    vrtltblEnderecoIBGE: TStringField;
+    cxgrdbclmnViewEnderecoIBGE: TcxGridDBColumn;
     procedure edtCpfCnpj1Exit(Sender: TObject);
     procedure btnConsultaCNPJClick(Sender: TObject);
     procedure btnConfirmaConsultaCNPJClick(Sender: TObject);
@@ -110,15 +107,18 @@ type
     procedure edtTelefonePropertiesChange(Sender: TObject);
     procedure btnCancelaConsultaCPFClick(Sender: TObject);
     procedure btnAtualizaCaptchaCPFClick(Sender: TObject);
-    procedure btnSalvarEnderecoClick(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
+    procedure btnEditarEnderecoClick(Sender: TObject);
     procedure btnCancelaClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnConfirmaClick(Sender: TObject);
     procedure edtEmailExit(Sender: TObject);
+    function retornaIndexUF(uf:string):Integer;
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
+    FUFDictionary: TDictionary<string, Integer>;
   public
+    destructor Destroy; override;
   var operacao : Integer ;
     { Public declarations }
   end;
@@ -127,7 +127,7 @@ var
   frmCadastroPessoa: TfrmCadastroPessoa;
 
 implementation
-  uses utils,unitDM, ACBrUtil,UEndereco, UCidade, UPessoa,unitPrincipal;
+  uses utils,unitDM, ACBrUtil,UEndereco, UCidade, UPessoa,unitPrincipal,unitCadastroEndeco;
 
 {$R *.dfm}
 
@@ -224,22 +224,83 @@ end;
 procedure TfrmCadastroPessoa.btnConfirmaClick(Sender: TObject);
 var
   NovaPessoa: TPessoa;
+  NovoEndereco: TEndereco;
+  Cidade: TCidade;
 begin
      NovaPessoa := TPessoa.Create;
      try
-            NovaPessoa.NOME := edtNome.Text;
-            NovaPessoa.NOMEFANTASIA := edtNomeFantasia.Text;
-            NovaPessoa.CPFCNPJ := edtCpfCnpj.Text;
-            NovaPessoa.TIPOPESSOA := grpTipo.ItemIndex;
-            NovaPessoa.EMAIL := edtEmail.Text;
-            NovaPessoa.SEXO := 1; // Substitua pelo código correspondente ao sexo
-            NovaPessoa.STATUS := 1; // Substitua pelo código correspondente ao status
-
-            // Chamar o método Inserir para adicionar a nova pessoa
-            NovaPessoa.Inserir;
+            NovaPessoa.ConsultarPorCpfCnpj(edtCpfCnpj.Text);
+            if Length(alltrim(NovaPessoa.Nome)) = 0 then
+            begin
+                  NovaPessoa.NOME := edtNome.Text;
+                  NovaPessoa.NOMEFANTASIA := edtNomeFantasia.Text;
+                  NovaPessoa.CPFCNPJ := edtCpfCnpj.Text;
+                  NovaPessoa.TIPOPESSOA := grpTipo.ItemIndex;
+                  NovaPessoa.EMAIL := edtEmail.Text;
+                  NovaPessoa.SEXO := grpSexo.ItemIndex;
+                  NovaPessoa.STATUS := grpStatus.ItemIndex;
+                  NovaPessoa.Inserir;
+            end
+            else
+            begin
+                 NovaPessoa.NOME := edtNome.Text;
+                 NovaPessoa.NOMEFANTASIA := edtNomeFantasia.Text;
+                 NovaPessoa.CPFCNPJ := edtCpfCnpj.Text;
+                 NovaPessoa.TIPOPESSOA := grpTipo.ItemIndex;
+                 NovaPessoa.EMAIL := edtEmail.Text;
+                 NovaPessoa.SEXO := grpSexo.ItemIndex;
+                 NovaPessoa.STATUS := grpStatus.ItemIndex;
+            end;
      finally
             NovaPessoa.Free;
      end;
+
+     try
+          try
+                 vrtltblEndereco.First;
+                 while  not vrtltblEndereco.Eof do
+                 begin
+                       Cidade := TCidade.Create;
+                       try
+                             Cidade.ConsultarPorCidade(vrtltblEndereco.FieldByName('CIDADE').AsString);
+
+                                   // Verificar se a cidade já existe no banco de dados
+                              if Length(alltrim(Cidade.Cidade)) = 0 then
+                              begin
+                                   // Se a cidade não existe, insere a cidade
+                                   Cidade.Cidade := vrtltblEndereco.FieldByName('CIDADE').AsString;
+                                   Cidade.UF     := retornaIndexUF(vrtltblEndereco.FieldByName('UF').AsString);
+                                   Cidade.IBGE   := vrtltblEndereco.FieldByName('IBGE').AsString;
+                                   Cidade.Inserir;
+                                   Cidade.ConsultarPorCidade(vrtltblEndereco.FieldByName('CIDADE').AsString);
+                              end;
+
+                              NovoEndereco := TEndereco.Create;
+                              try
+                                          NovoEndereco.Pessoa := Integer.Parse(edtCodigo.Text);
+                                          NovoEndereco.CEP := vrtltblEndereco.FieldByName('CEP').AsString;
+                                          NovoEndereco.Logradouro := vrtltblEndereco.FieldByName('LOUGRADOURO').AsString;
+                                          NovoEndereco.Numero := vrtltblEndereco.FieldByName('NUMERO').AsString;
+                                          NovoEndereco.Bairro := vrtltblEndereco.FieldByName('BAIRRO').AsString;
+                                          NovoEndereco.Complemento := vrtltblEndereco.FieldByName('COMPLEMENTO').AsString;
+                                          NovoEndereco.Cidade := Cidade.Codigo;
+
+                                          NovoEndereco.Inserir;
+                              finally
+                                          NovoEndereco.Free;
+                              end;
+                       finally
+                                  Cidade.Free;
+                       end;
+                       vrtltblEndereco.Next;
+                 end;
+          finally
+          end;
+     except on E: Exception do
+     end;
+
+
+
 end;
 
 procedure TfrmCadastroPessoa.btnConfirmaConsultaCNPJClick(Sender: TObject);
@@ -255,33 +316,35 @@ begin
                    edtnome.Text              := RazaoSocial;
                    if not( Fantasia.Contains('***')) then
                       edtNomeFantasia.Text   := Fantasia;
-                   edtLougradouro.Text       := Endereco;
-                   edtNumero.Text            := Numero;
-                   edtcomplemento.Text       := Complemento;
-                   mskedtCep.Text            := CEP;
-                   edtbairro.Text            := Bairro;
-                   cbbestado.ItemIndex       := cbbestado.Properties.Items.IndexOf(UF);
+                   dsEndereco.DataSet.Insert;
+                   dsEndereco.DataSet.FieldByName('LOUGRADOURO').AsString := Endereco;
+                   dsEndereco.DataSet.FieldByName('NUMERO').AsString := Numero;
+                   dsEndereco.DataSet.FieldByName('COMPLEMENTO').AsString := Complemento;
+                   dsEndereco.DataSet.FieldByName('CEP').AsString:= CEP;
+                   dsEndereco.DataSet.FieldByName('BAIRRO').AsString:= Bairro;
+                   dsEndereco.DataSet.FieldByName('UF').AsInteger:= retornaIndexUF(UF);
+                   dsEndereco.DataSet.FieldByName('CIDADE').AsString:= cidade;
                    edtTelefone.Text          := alltrim(Telefone);
-                   edtcidade.text            := cidade;
+
 
                    edtemail.Text         := EndEletronico;
                    grpTipo.ItemIndex := 0;
 
                    if Trim(IBGE_Municipio) <> '' then
-                      edtIbge.Text   := Trim(IBGE_Municipio)
+                     dsEndereco.DataSet.FieldByName('IBGE').AsString:=(IBGE_Municipio)
                    else
                    begin
-                        if Length(Trim(mskedtCep.Text)) = 9 then
+                        if Length(Trim(CEP)) = 9 then
                         begin
                              DM.ConfiguraBuscaCEP(8);
                              try
-                                   DM.ACBrCEP1.BuscarPorCEP(SomenteNumeros(mskedtCep.Text));
+                                   DM.ACBrCEP1.BuscarPorCEP(SomenteNumeros(CEP));
                              except On E : Exception do
                                     MessageDlg('Erro: '+E.Message+'!',mtInformation,[mbOk],0);
                              end;
                         end;
                    end;
-
+                   dsEndereco.DataSet.Post;
                    pnlFundo.Enabled:=True;
                    edtCpfCnpj.SetFocus;
                    pnlConsultaCNPJ.Visible:=False;
@@ -360,43 +423,11 @@ begin
      end;
 end;
 
-procedure TfrmCadastroPessoa.btnSalvarEnderecoClick(Sender: TObject);
-var
-  NovoEndereco: TEndereco;
-  Cidade: TCidade;
+procedure TfrmCadastroPessoa.btnEditarEnderecoClick(Sender: TObject);
 begin
-     Cidade := TCidade.Create;
-     try
-             Cidade.ConsultarPorCidade(edtCidade.Text);
-
-             // Verificar se a cidade já existe no banco de dados
-             if Length(alltrim(Cidade.Cidade)) = 0 then
-             begin
-                  // Se a cidade não existe, insere a cidade
-                  Cidade.Cidade := edtCidade.Text;
-                  Cidade.UF     := cbbEstado.ItemIndex;
-                  Cidade.IBGE   := edtIbge.Text;
-                  Cidade.Inserir;
-                  Cidade.ConsultarPorCidade(edtCidade.Text);
-             end;
-
-             NovoEndereco := TEndereco.Create;
-             try
-                    NovoEndereco.Pessoa := Integer.Parse(edtCodigo.Text);
-                    NovoEndereco.CEP := mskedtCep.Text;
-                    NovoEndereco.Logradouro := edtLougradouro.Text;
-                    NovoEndereco.Numero := edtNumero.Text;
-                    NovoEndereco.Bairro := edtBairro.Text;
-                    NovoEndereco.Complemento := edtComplemento.Text;
-                    NovoEndereco.Cidade := Cidade.Codigo;
-
-                    NovoEndereco.Inserir;
-             finally
-                    NovoEndereco.Free;
-             end;
-     finally
-            Cidade.Free;
-     end;
+     dsEndereco.Edit;
+     frmCadastroEndereco:= TfrmCadastroEndereco.Create(Self);
+     frmCadastroEndereco.ShowModal;
 end;
 
 procedure TfrmCadastroPessoa.edtCpfCnpj1Exit(Sender: TObject);
@@ -526,7 +557,48 @@ end;
 
 procedure TfrmCadastroPessoa.FormCreate(Sender: TObject);
 begin
-     pgcCadPessoa.TabWidth:=300;
+     FUFDictionary := TDictionary<string, Integer>.Create;
+     FUFDictionary.Add('AC', 0);
+     FUFDictionary.Add('AL', 1);
+     FUFDictionary.Add('AP', 2);
+     FUFDictionary.Add('AM',3);
+     FUFDictionary.Add('BA',4);
+     FUFDictionary.Add('CE',5);
+     FUFDictionary.Add('DF',6);
+     FUFDictionary.Add('ES',7);
+     FUFDictionary.Add('GO',8);
+     FUFDictionary.Add('MA',9);
+     FUFDictionary.Add('MT',10);
+     FUFDictionary.Add('MS',11);
+     FUFDictionary.Add('MG',12);
+     FUFDictionary.Add('PA',13);
+     FUFDictionary.Add('PB',14);
+     FUFDictionary.Add('PR',15);
+     FUFDictionary.Add('PE',16);
+     FUFDictionary.Add('PI',17);
+     FUFDictionary.Add('RJ',18);
+     FUFDictionary.Add('RN',19);
+     FUFDictionary.Add('RS',20);
+     FUFDictionary.Add('RO',21);
+     FUFDictionary.Add('RR',22);
+     FUFDictionary.Add('SC',23);
+     FUFDictionary.Add('SP',24);
+     FUFDictionary.Add('SE',25);
+     FUFDictionary.Add('TO',26);
+end;
+
+function TfrmCadastroPessoa.retornaIndexUF(uf:string):Integer;
+begin
+     if FUFDictionary.ContainsKey(uf) then
+       Result := FUFDictionary[uf]
+     else
+         Result := -1;
+end;
+
+destructor TfrmCadastroPessoa.Destroy;
+begin
+  FUFDictionary.Free;
+  inherited;
 end;
 
 end.

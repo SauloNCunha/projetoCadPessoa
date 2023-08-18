@@ -123,6 +123,10 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Classes\UConsultaPessoa.pas"/>
+        <DCCReference Include="Cadastros\unitCadastroEndeco.pas">
+            <Form>frmCadastroEndereco</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

@@ -11,7 +11,8 @@ uses
   UCidade in 'Classes\UCidade.pas',
   UPessoa in 'Classes\UPessoa.pas',
   unitListagem in 'Listagem\unitListagem.pas' {frmListagem},
-  UConsultaPessoa in 'Classes\UConsultaPessoa.pas';
+  UConsultaPessoa in 'Classes\UConsultaPessoa.pas',
+  unitCadastroEndeco in 'Cadastros\unitCadastroEndeco.pas' {frmCadastroEndereco};
 
 {$R *.res}
 
@@ -21,5 +22,6 @@ begin
   Application.CreateForm(TfrmPrincipal, frmPrincipal);
   Application.CreateForm(TDM, DM);
   Application.CreateForm(TfrmListagem, frmListagem);
+  Application.CreateForm(TfrmCadastroEndereco, frmCadastroEndereco);
   Application.Run;
 end.

@@ -25,20 +25,6 @@ type
     dsTelefone: TDataSource;
     dsEndereco: TDataSource;
     Timer1: TTimer;
-    pnlConsultaCPF: TPanel;
-    pnlBotoesCpf: TPanel;
-    btnAtualizaCaptchaCPF: TBitBtn;
-    btnCancelaConsultaCPF: TBitBtn;
-    btnConsultaCPF: TBitBtn;
-    pnlCaptchaCPFconsulta: TPanel;
-    imgCapchaCPF: TImage;
-    lbl2: TLabel;
-    pnledtCaptchaCPF: TPanel;
-    pnlEdtCapchaCPF: TPanel;
-    edtCapchaCPF: TEdit;
-    pnlfundodata: TPanel;
-    pnledtdatanas: TPanel;
-    edtdatanasci: TcxMaskEdit;
     pnlConsultaCNPJ: TPanel;
     Panel1: TPanel;
     btnAtualiza: TBitBtn;
@@ -140,12 +126,12 @@ begin
      begin
            if ValidaCPF(SomenteNumeros(edtCpfCnpj.Text)) then
            begin
-                pnlConsultaCPF.Visible:=True;
+                frmCadastroPessoa.pnlConsultaCPF.Visible:=True;
                 pnlFundo.Enabled:=False;
-                pnlConsultaCPF.Left:=Trunc((Width-pnlConsultaCPF.Width)/2);
-                pnlConsultaCPF.Top:=Trunc((Height-pnlConsultaCPF.Height)/2);
+                frmCadastroPessoa.pnlConsultaCPF.Left:=Trunc((Width-frmCadastroPessoa.pnlConsultaCPF.Width)/2);
+                frmCadastroPessoa.pnlConsultaCPF.Top:=Trunc((Height-frmCadastroPessoa.pnlConsultaCPF.Height)/2);
                 Timer1.Enabled:= True;
-                edtCapchaCPF.SetFocus;
+                frmCadastroPessoa.edtCapchaCPF.SetFocus;
            end
            else
                edtCpfCnpj.SetFocus;
@@ -154,12 +140,12 @@ begin
      begin
            if ValidaCNPJ(SomenteNumeros(edtCpfCnpj.Text)) then
            begin
-                pnlConsultaCNPJ.Visible:=True;
+                frmCadastroPessoa.pnlConsultaCNPJ.Visible:=True;
                 pnlFundo.Enabled:=False;
-                pnlConsultaCNPJ.Left:=Trunc((Width-pnlConsultaCNPJ.Width)/2);
-                pnlConsultaCNPJ.Top:=Trunc((Height-pnlConsultaCNPJ.Height)/2);
+                frmCadastroPessoa.pnlConsultaCNPJ.Left:=Trunc((Width-frmCadastroPessoa.pnlConsultaCNPJ.Width)/2);
+                frmCadastroPessoa.pnlConsultaCNPJ.Top:=Trunc((Height-frmCadastroPessoa.pnlConsultaCNPJ.Height)/2);
                 Timer1.Enabled:= True;
-                edtCaptcha.SetFocus;
+                frmCadastroPessoa.edtCaptcha.SetFocus;
            end
            else
                edtCpfCnpj.SetFocus;

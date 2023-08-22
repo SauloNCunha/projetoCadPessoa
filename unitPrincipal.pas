@@ -16,10 +16,11 @@ type
     cxlblpropaganda: TcxLabel;
     btnMenu: TSpeedButton;
     btnListagem: TSpeedButton;
-    btnCdastro: TSpeedButton;
+    btnCadastro: TSpeedButton;
+    btnRelatorio: TSpeedButton;
     procedure btnMenuClick(Sender: TObject);
     procedure btnListagemClick(Sender: TObject);
-    procedure btnCdastroClick(Sender: TObject);
+    procedure btnCadastroClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
@@ -39,7 +40,7 @@ uses unitCadastroPessoa,unitListagem, unitDM;
 
 {$R *.dfm}
 
-procedure TfrmPrincipal.btnCdastroClick(Sender: TObject);
+procedure TfrmPrincipal.btnCadastroClick(Sender: TObject);
 begin
      if not formAbert then
      begin
@@ -68,8 +69,13 @@ end;
 
 procedure TfrmPrincipal.btnMenuClick(Sender: TObject);
 begin
-     btnListagem.Visible := not btnListagem.Visible;
-     btnCdastro.Visible := not btnCdastro.Visible;
+     btnListagem.Top  := btnMenu.Top+btnMenu.Height;
+     btnCadastro.Top  := btnListagem.Top+btnListagem.Height;
+     btnRelatorio.Top := btnCadastro.Top+btnCadastro.Height;
+
+     btnListagem.Visible   := not btnListagem.Visible;
+     btnCadastro.Visible   := not btnCadastro.Visible;
+     btnRelatorio.Visible  := not btnRelatorio.Visible;
      if btnListagem.Visible then
         pnlMenu.Width:=120
      else

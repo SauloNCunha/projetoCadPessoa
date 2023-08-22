@@ -12,7 +12,10 @@ uses
   UPessoa in 'Classes\UPessoa.pas',
   unitListagem in 'Listagem\unitListagem.pas' {frmListagem},
   UConsultaPessoa in 'Classes\UConsultaPessoa.pas',
-  unitCadastroEndeco in 'Cadastros\unitCadastroEndeco.pas' {frmCadastroEndereco};
+  unitCadastroEndeco in 'Cadastros\unitCadastroEndeco.pas' {frmCadastroEndereco},
+  unitConsulta in 'Cadastros\unitConsulta.pas' {frmConsulta},
+  unitConsultaCNPJ in 'Cadastros\unitConsultaCNPJ.pas' {frmConsultaCnpj},
+  unitConsultaCPF in 'Cadastros\unitConsultaCPF.pas' {frmConsulta2};
 
 {$R *.res}
 
@@ -23,5 +26,8 @@ begin
   Application.CreateForm(TDM, DM);
   Application.CreateForm(TfrmListagem, frmListagem);
   Application.CreateForm(TfrmCadastroEndereco, frmCadastroEndereco);
+  Application.CreateForm(TfrmConsulta, frmConsulta);
+  Application.CreateForm(TfrmConsultaCnpj, frmConsultaCnpj);
+  Application.CreateForm(TfrmConsulta2, frmConsulta2);
   Application.Run;
 end.
